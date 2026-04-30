@@ -1,0 +1,95 @@
+// Version: 1.0.0
+type AccountId__552256128 = Nat;
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExternalBlob__671167343 = Blob;
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OptimizationResult__284727572 =
+  {
+    generatedAt : Timestamp__301639476;
+    postId : PostId__861309770;
+    suggestions : [PlatformCaption__747354257]
+  };
+type PlatformCaption__747354257 =
+  {caption : Text; hashtags : [Text]; platform : Platform__696854852};
+type PlatformResult__684074556 =
+  {
+    platform : Platform__696854852;
+    postUrl : ?Text;
+    publishedAt : ?Timestamp__301639476;
+    status : PublishStatus__195130043
+  };
+type Platform__696854852 =
+  {#facebook; #instagram; #linkedin; #tiktok; #twitter};
+type PostId__861309770 = Nat;
+type Post__495728462 =
+  {
+    createdAt : Timestamp__301639476;
+    id : PostId__861309770;
+    mediaBlob : ExternalBlob__671167343;
+    mediaFilename : Text;
+    originalCaption : Text;
+    owner : UserId__158757552;
+    var publishStatus : PublishStatus__195130043;
+    selectedPlatforms : [Platform__696854852];
+    var updatedAt : Timestamp__301639476
+  };
+type PublishStatus__195130043 =
+  {#failed : Text; #pending; #publishing; #success};
+type SocialAccount__284019312 =
+  {
+    var accessToken : Text;
+    var accountHandle : Text;
+    createdAt : Timestamp__301639476;
+    id : AccountId__552256128;
+    var isActive : Bool;
+    owner : UserId__158757552;
+    platform : Platform__696854852;
+    var refreshToken : Text
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserRole__1073662873 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1073662873>
+    };
+  stable accounts :
+    {
+      var root :
+        Node__46230540<AccountId__552256128, SocialAccount__284019312>;
+      var size : Nat__490723111
+    };
+  stable nextAccountId : {var value : AccountId__552256128};
+  stable nextPostId : {var value : PostId__861309770};
+  stable optimizations :
+    {
+      var root :
+        Node__46230540<PostId__861309770, OptimizationResult__284727572>;
+      var size : Nat__490723111
+    };
+  stable platformResults :
+    {
+      var root :
+        Node__46230540<PostId__861309770, [PlatformResult__684074556]>;
+      var size : Nat__490723111
+    };
+  stable posts :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Post__495728462]];
+      var elementIndex : Nat__490723111
+    }
+};

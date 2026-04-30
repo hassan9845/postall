@@ -1,0 +1,22 @@
+{
+  "overview": "PostAll is a social media management platform that lets you create a post once and publish it across Instagram, Facebook, TikTok, LinkedIn, and Twitter/X simultaneously. Features AI caption optimization, hashtag suggestions, scheduling, and performance analytics.",
+  "features": [
+    "Multi-platform publishing to Instagram, Facebook, TikTok, LinkedIn, Twitter/X",
+    "AI caption optimization per platform",
+    "Hashtag suggestions",
+    "Post scheduling with date/time picker",
+    "Performance Insights analytics dashboard",
+    "Post history with Scheduled/Published/Failed tabs",
+    "Connect Your Channels account management"
+  ],
+  "category": "productivity",
+  "tags": [
+    "social-media",
+    "content-management",
+    "scheduling",
+    "analytics",
+    "multi-platform",
+    "publishing"
+  ],
+  "last_updated": "2026-04-28T13:33:47.367Z"
+}

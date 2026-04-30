@@ -1,0 +1,141 @@
+type http_request_result = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type http_header = 
+ record {
+   name: text;
+   value: text;
+ };
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type TransformationOutput = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type TransformationInput = 
+ record {
+   context: blob;
+   response: http_request_result;
+ };
+type Timestamp = int;
+type SocialAccountPublic = 
+ record {
+   accountHandle: text;
+   createdAt: Timestamp;
+   id: AccountId;
+   isActive: bool;
+   platform: Platform;
+ };
+type PublishStatus = 
+ variant {
+   failed: text;
+   pending;
+   publishing;
+   success;
+ };
+type PostPublic = 
+ record {
+   createdAt: Timestamp;
+   id: PostId;
+   mediaBlob: ExternalBlob;
+   mediaFilename: text;
+   originalCaption: text;
+   platformResults: vec PlatformResult;
+   publishStatus: PublishStatus;
+   selectedPlatforms: vec Platform;
+   updatedAt: Timestamp;
+ };
+type PostId = nat;
+type PlatformResult = 
+ record {
+   platform: Platform;
+   postUrl: opt text;
+   publishedAt: opt Timestamp;
+   status: PublishStatus;
+ };
+type PlatformCaption = 
+ record {
+   caption: text;
+   hashtags: vec text;
+   platform: Platform;
+ };
+type Platform = 
+ variant {
+   facebook;
+   instagram;
+   linkedin;
+   tiktok;
+   twitter;
+ };
+type OptimizationResult = 
+ record {
+   generatedAt: Timestamp;
+   postId: PostId;
+   suggestions: vec PlatformCaption;
+ };
+type ExternalBlob = blob;
+type CreatePostRequest = 
+ record {
+   mediaBlob: ExternalBlob;
+   mediaFilename: text;
+   originalCaption: text;
+   selectedPlatforms: vec Platform;
+ };
+type AddAccountRequest = 
+ record {
+   accessToken: text;
+   accountHandle: text;
+   platform: Platform;
+   refreshToken: text;
+ };
+type AccountId = nat;
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addSocialAccount: (req: AddAccountRequest) -> (SocialAccountPublic);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createPost: (req: CreatePostRequest) -> (PostPublic);
+  getCallerUserRole: () -> (UserRole) query;
+  getOptimizationResult: (postId: PostId) -> (opt OptimizationResult) query;
+  getPost: (postId: PostId) -> (opt PostPublic) query;
+  getPublishResults: (postId: PostId) -> (vec PlatformResult) query;
+  isCallerAdmin: () -> (bool) query;
+  listPosts: () -> (vec PostPublic) query;
+  listSocialAccounts: () -> (vec SocialAccountPublic) query;
+  optimizeCaption: (postId: PostId) -> (OptimizationResult);
+  publishPost: (postId: PostId) -> (vec PlatformResult);
+  revokeSocialAccount: (accountId: AccountId) -> (bool);
+  transformAi: (input: TransformationInput) -> (TransformationOutput) query;
+  transformPublish: (input: TransformationInput) ->
+   (TransformationOutput) query;
+}
